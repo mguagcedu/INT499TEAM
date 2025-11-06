@@ -1,0 +1,28 @@
+import { loadEvents } from '../utils/localStorage';
+
+function formatTs(ts) {
+  const d = new Date(ts);
+  return d.toLocaleString();
+}
+
+export default function Events() {
+  const events = loadEvents();
+  return (
+    <section className="card">
+      <h2>User events</h2>
+      {events.length === 0 ? (
+        <p className="events-item meta">No events recorded yet</p>
+      ) : (
+        <div className="events-panel">
+        <ul className="events-grid">
+          {events.map(e => (
+            <li key={e.id} className="events-item meta">
+              <span className="badge">{e.type}</span> at {formatTs(e.ts)} {e.detail?.title ? `- ${e.detail.title}` : ''}
+            </li>
+          ))}
+        </ul>
+      </div>
+      )}
+    </section>
+  );
+}

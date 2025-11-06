@@ -1,0 +1,154 @@
+/* Smooth route change */
+.route-fade{ animation: fadeInUp .35s ease both; }
+@keyframes fadeInUp{
+  from{ opacity:0; transform: translateY(6px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+/* Subtle card hover (applies to any .card) */
+.card{
+  transition: transform 160ms ease, box-shadow 180ms ease, border-color 160ms ease;
+}
+.card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+}
+
+/* Buttons get a gentle pop */
+button{
+  transition: transform 100ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+button:hover{ transform: translateY(-1px); }
+button:active{ transform: translateY(0) scale(0.98); }
+
+/* Nav link underline + active state (works with NavLink: aria-current="page") */
+.header .nav a, nav a{
+  position: relative;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+.header .nav a::after, nav a::after{
+  content:'';
+  position:absolute; left:0; bottom:-6px;
+  height:2px; width:0;
+  background: currentColor;
+  opacity: .9;
+  transition: width 180ms ease;
+}
+.header .nav a:hover::after, nav a:hover::after{ width:100%; }
+.header .nav a[aria-current="page"]::after, nav a[aria-current="page"]::after{ width:100%; }
+
+/* Optional drawer animations if you have a cart drawer container */
+.cart-drawer{
+  transition: transform 220ms ease, opacity 220ms ease;
+  will-change: transform, opacity;
+}
+.cart-drawer--enter{ transform: translateX(8px); opacity: 0; }
+.cart-drawer--enter-active{ transform: translateX(0); opacity: 1; }
+.cart-drawer--exit{ transform: translateX(0); opacity: 1; }
+.cart-drawer--exit-active{ transform: translateX(8px); opacity: 0; }
+
+/* ===== Empty-state & section header helpers ===== */
+.empty-center{
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.section-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-title{
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.subtle{
+  color: #a9b0bb;
+}
+
+/* Search page layout tweaks */
+.search-wrap{
+  display: grid;
+  gap: 14px;
+}
+.search-form{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.search-form input[type="text"]{
+  width: min(560px, 90vw);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #1f283a;
+  background: #0d1321;
+  color: #e6e6e6;
+}
+.search-form button{
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #2a354e;
+  background: #152035;
+  color: #e6e6e6;
+}
+
+/* Events toggle button style (inherits your theme) */
+.btn-toggle{
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #2a354e;
+  background: #152035;
+  color: #e6e6e6;
+  cursor: pointer;
+  transition: transform 100ms ease, background 160ms ease, border-color 160ms ease;
+}
+.btn-toggle:hover{ transform: translateY(-1px); background: #1a2946; border-color: #35517a; }
+
+/* ===== Page padding helper (use on sections that touch edges) ===== */
+.page-pad{ padding-left: clamp(14px, 4vw, 48px); padding-right: clamp(14px, 4vw, 48px); }
+
+/* Centered header variant for Search page */
+.section-header.centered{
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+.section-header.centered .section-title{ font-size: 1.8rem; }
+
+/* Events: grid columns with capped height + scrolling */
+.events-panel{ margin-top: 8px; }
+.events-grid{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap: 12px;
+  max-height: 55vh;     /* after this, it scrolls */
+  overflow-y: auto;
+  padding-right: 6px;   /* keep scrollbar off the text */
+}
+.events-item{
+  border: 1px solid #22304d;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(13,19,33,0.35);
+}
+
+.search-note{
+  text-align: center;
+  margin: 10px 0 6px;
+  font-size: 1.05rem;
+  opacity: .95;
+}

@@ -1,0 +1,28 @@
+.movie-card{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 10px;
+  overflow: hidden;            /* prevents poster bleed */
+}
+
+.movie-card img{
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;         /* consistent poster shape */
+  object-fit: cover;           /* crop nicely if odd sizes */
+  display: block;
+}
+
+.movie-card .meta{
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.favorite-badge{
+  text-align: center;
+  color: #ffd700;           /* gold */
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: -4px;
+}

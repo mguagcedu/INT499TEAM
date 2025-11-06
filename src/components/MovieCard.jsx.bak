@@ -1,0 +1,34 @@
+import { useState, useEffect } from 'react';
+import { toggleFavorite, getFavorites } from '../utils/localStorage';
+import './MovieCard.css';
+
+export default function MovieCard({ movie, compact = false }) {
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    const favs = getFavorites();
+    setIsFav(favs.some(f => f.id === movie.id));
+  }, [movie.id]);
+
+  const onFav = () => {
+    toggleFavorite(movie);
+    const favs = getFavorites();
+    setIsFav(favs.some(f => f.id === movie.id));
+  };
+
+  const posterUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+    : 'https://placehold.co/342x513?text=No+Image';
+
+  return (
+    <div className="card movie-card">
+      {!compact && <h4>{movie.title}</h4>}
+      <img src={posterUrl} alt={movie.title} />
+      <div className="meta">Rating {movie.vote_average?.toFixed?.(1) ?? 'N/A'}</div>
+      {isFav && <div className="favorite-badge">⭐ Added to Favorites</div>}
+      <button onClick={onFav}>
+        {isFav ? 'Remove Favorite' : 'Add to Favorites'}
+      </button>
+    </div>
+  );
+}

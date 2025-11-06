@@ -15,7 +15,10 @@ export default function NavBar({ onOpenCart, count }){
           <NavLink to="/accessories">Accessories</NavLink>
           <NavLink to="/cart">Cart</NavLink>
           <NavLink to="/checkout">Checkout</NavLink>
-        </nav>
+          <NavLink to="/search">Search</NavLink>
+  <NavLink to="/favorites">Favorites</NavLink>
+  <NavLink to="/events">Events</NavLink>
+</nav>
         <div className="spacer" />
         <button className="cartbtn" onClick={onOpenCart}>
           View Cart

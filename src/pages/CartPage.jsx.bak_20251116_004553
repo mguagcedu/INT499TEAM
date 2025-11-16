@@ -1,0 +1,197 @@
+import React, { useMemo, useState } from "react";
+import { useApp } from "../context/AppContext";
+
+export default function CartPage() {
+  const { cart, updateCartQuantity, removeFromCart, clearCart } = useApp();
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [placingOrder, setPlacingOrder] = useState(false);
+
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const subtotal = useMemo(
+    () =>
+      cart.reduce(
+        (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+        0
+      ),
+    [cart]
+  );
+
+  const handleQuantityChange = (id, quantity) => {
+    const value = parseInt(quantity, 10);
+    if (Number.isNaN(value) || value <= 0) return;
+    updateCartQuantity(id, value);
+  };
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    if (cart.length === 0) return;
+    setPlacingOrder(true);
+    setTimeout(() => {
+      alert(
+        `Demo checkout complete with payment method: ${paymentMethod}. No real payment was processed.`
+      );
+      clearCart();
+      setPlacingOrder(false);
+    }, 600);
+  };
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <h2 className="page-title">Cart and checkout</h2>
+          <p className="page-subtitle">
+            Review your subscriptions and items before placing a demo order.
+          </p>
+        </div>
+        <div className="cart-indicator">
+          Cart ({cartCount})
+        </div>
+      </div>
+
+      {cart.length === 0 ? (
+        <p className="muted">Your cart is empty. Visit the shop to add items.</p>
+      ) : (
+        <div className="cart-layout">
+          {/* Left: cart items */}
+          <div className="cart-items">
+            {cart.map((item) => (
+              <div key={item.id} className="cart-item-card">
+                {item.imageUrl && (
+                  <div className="cart-item-image-wrap">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name || item.title}
+                      className="cart-item-image"
+                    />
+                  </div>
+                )}
+                <div className="cart-item-main">
+                  <h3 className="cart-item-title">
+                    {item.name || item.title}
+                    {item.type === "subscription" && (
+                      <span className="cart-badge">Subscription</span>
+                    )}
+                  </h3>
+                  {item.description && (
+                    <p className="cart-item-description multi-line">
+                      {item.description}
+                    </p>
+                  )}
+                  <div className="cart-item-meta">
+                    <span className="cart-item-price">
+                      ${item.price?.toFixed(2) ?? "0.00"}
+                    </span>
+                    <label className="cart-item-qty-label">
+                      Qty
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity || 1}
+                        onChange={(e) =>
+                          handleQuantityChange(item.id, e.target.value)
+                        }
+                      />
+                    </label>
+                  </div>
+                  <div className="cart-item-footer">
+                    <span className="cart-item-subtotal">
+                      Line total: $
+                      {((item.price || 0) * (item.quantity || 1)).toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn-link-danger"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Right: summary and payment */}
+          <div className="cart-summary">
+            <div className="card">
+              <h3 className="card-title">Order summary</h3>
+              <p className="summary-row">
+                <span>Items:</span>
+                <span>{cartCount}</span>
+              </p>
+              <p className="summary-row">
+                <span>Subtotal:</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </p>
+              <p className="summary-row">
+                <span>Estimated tax (demo):</span>
+                <span>${(subtotal * 0.06).toFixed(2)}</span>
+              </p>
+              <p className="summary-row summary-total">
+                <span>Total (demo):</span>
+                <span>${(subtotal * 1.06).toFixed(2)}</span>
+              </p>
+            </div>
+
+            <form className="card checkout-card" onSubmit={handlePlaceOrder}>
+              <h3 className="card-title">Payment method (demo only)</h3>
+              <div className="payment-options">
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    value="card"
+                    checked={paymentMethod === "card"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span>Debit or credit card</span>
+                </label>
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    value="paypal"
+                    checked={paymentMethod === "paypal"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span>PayPal</span>
+                </label>
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    value="cashapp"
+                    checked={paymentMethod === "cashapp"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span>Cash App Pay</span>
+                </label>
+                <label className="payment-option">
+                  <input
+                    type="radio"
+                    value="other"
+                    checked={paymentMethod === "other"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  />
+                  <span>Other method</span>
+                </label>
+              </div>
+
+              <p className="muted small-text">
+                This checkout is for demonstration purposes only. No real payment
+                details are stored or processed.
+              </p>
+
+              <button
+                type="submit"
+                className="btn-primary-full"
+                disabled={placingOrder || cart.length === 0}
+              >
+                {placingOrder ? "Placing order..." : "Place demo order"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

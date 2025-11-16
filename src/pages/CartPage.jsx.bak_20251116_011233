@@ -1,0 +1,277 @@
+import React, { useState } from "react";
+import { useApp } from "../context/AppContext";
+
+const CartPage = () => {
+  const {
+    cartItems = [],
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
+  } = useApp();
+
+  const [paymentMethod, setPaymentMethod] = useState("card");
+
+  const subtotal = cartItems.reduce((sum, item) => {
+    const qty = item.quantity ?? 1;
+    const price = item.price ?? 0;
+    return sum + qty * price;
+  }, 0);
+
+  const handleQuantityChange = (id, delta) => {
+    if (!updateCartItemQuantity) return;
+    updateCartItemQuantity(id, delta);
+  };
+
+  const handleRemove = (id) => {
+    if (!removeFromCart) return;
+    removeFromCart(id);
+  };
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    if (!cartItems.length) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    alert(
+      `Demo checkout complete using ${paymentMethod}. No real payment was processed.`
+    );
+
+    if (clearCart) {
+      clearCart();
+    }
+  };
+
+  return (
+    <div className="page">
+      <div className="page-inner max-w-6xl mx-auto">
+        <div className="page-header mb-6">
+          <h1 className="text-2xl font-semibold text-white">
+            StreamList Dashboard
+          </h1>
+          <p className="text-gray-300">
+            Review your subscriptions and items before placing a demo order.
+          </p>
+        </div>
+
+        {/* CART CONTENT */}
+        {cartItems.length === 0 ? (
+          <div className="bg-slate-900/80 border border-slate-700 rounded-xl p-6 text-center text-gray-300">
+            Your cart is empty. Visit the Shop page to add a subscription or
+            merch.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Items list */}
+            <div className="lg:col-span-2 bg-slate-900/80 border border-slate-700 rounded-xl p-4">
+              <h2 className="text-lg font-semibold text-white mb-4">
+                Cart items
+              </h2>
+
+              <div className="space-y-3">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-4 bg-slate-950/80 rounded-lg p-3"
+                  >
+                    <div className="w-20 h-20 bg-black/40 rounded-md overflow-hidden flex items-center justify-center">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">No image</span>
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-white truncate mr-2">
+                          {item.title}
+                        </h3>
+                        <span className="text-sm font-semibold text-emerald-400">
+                          ${((item.price ?? 0) * (item.quantity ?? 1)).toFixed(2)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-400">
+                        {item.type === "subscription"
+                          ? "Subscription"
+                          : "Merchandise item"}
+                      </p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          className="px-2 py-1 rounded-md border border-slate-600 text-xs text-white hover:bg-slate-700"
+                          onClick={() => handleQuantityChange(item.id, -1)}
+                        >
+                          −
+                        </button>
+                        <span className="text-white text-sm">
+                          {item.quantity ?? 1}
+                        </span>
+                        <button
+                          type="button"
+                          className="px-2 py-1 rounded-md border border-slate-600 text-xs text-white hover:bg-slate-700"
+                          onClick={() => handleQuantityChange(item.id, 1)}
+                        >
+                          +
+                        </button>
+
+                        <button
+                          type="button"
+                          className="ml-4 text-xs text-red-400 hover:text-red-300"
+                          onClick={() => handleRemove(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Summary + payment */}
+            <div className="bg-slate-900/80 border border-slate-700 rounded-xl p-4">
+              <h2 className="text-lg font-semibold text-white mb-4">
+                Checkout
+              </h2>
+
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-gray-300 text-sm">
+                  Items in cart:{" "}
+                  <span className="font-semibold text-white">
+                    {cartItems.length}
+                  </span>
+                </span>
+                <span className="text-gray-300 text-sm">
+                  Subtotal:{" "}
+                  <span className="font-semibold text-emerald-400">
+                    ${subtotal.toFixed(2)}
+                  </span>
+                </span>
+              </div>
+
+              <form onSubmit={handlePlaceOrder} className="space-y-4">
+                <div>
+                  <p className="text-sm font-semibold text-white mb-2">
+                    Payment method
+                  </p>
+                  <div className="space-y-2 text-sm text-gray-200">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="card"
+                        checked={paymentMethod === "card"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <span>Debit / credit card</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="paypal"
+                        checked={paymentMethod === "paypal"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <span>PayPal</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="cashapp"
+                        checked={paymentMethod === "cashapp"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <span>Cash App Pay</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="applepay"
+                        checked={paymentMethod === "applepay"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <span>Apple Pay</span>
+                    </label>
+                  </div>
+                </div>
+
+                {paymentMethod === "card" && (
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <label className="block text-gray-300 mb-1">
+                        Card number
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full rounded-md bg-slate-950 border border-slate-600 px-2 py-1 text-white text-sm"
+                        placeholder="1234 5678 9012 3456"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1">
+                        <label className="block text-gray-300 mb-1">
+                          Expiration
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full rounded-md bg-slate-950 border border-slate-600 px-2 py-1 text-white text-sm"
+                          placeholder="MM/YY"
+                        />
+                      </div>
+                      <div className="w-24">
+                        <label className="block text-gray-300 mb-1">
+                          CVC
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full rounded-md bg-slate-950 border border-slate-600 px-2 py-1 text-white text-sm"
+                          placeholder="123"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 mb-1">
+                        Name on card
+                      </label>
+                        <input
+                          type="text"
+                          className="w-full rounded-md bg-slate-950 border border-slate-600 px-2 py-1 text-white text-sm"
+                          placeholder="Full name"
+                        />
+                    </div>
+                  </div>
+                )}
+
+                {paymentMethod !== "card" && (
+                  <p className="text-xs text-gray-400">
+                    This is a demo checkout. Choosing {paymentMethod} will not
+                    process a real payment, but will simulate completing the
+                    order.
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full mt-2 py-2 rounded-full bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition"
+                >
+                  Place demo order
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CartPage;

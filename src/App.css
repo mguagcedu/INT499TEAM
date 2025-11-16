@@ -1,0 +1,520 @@
+/* ========== GLOBAL RESET ========== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #020816;
+  color: #ffffff;
+}
+
+/* ========== APP SHELL LAYOUT ========== */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== NAVIGATION ========== */
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2.5rem;
+  background: #050b1c;
+  border-bottom: 1px solid #111827;
+}
+
+.app-nav-left,
+.app-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.app-logo-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #34d399, #22c55e 45%, #16a34a 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #020617;
+  font-weight: 700;
+}
+
+.app-logo-text-main {
+  font-size: 1rem;
+}
+
+.app-nav-links {
+  display: flex;
+  gap: 1.1rem;
+}
+
+.app-nav-link {
+  font-size: 0.9rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.app-nav-link:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.app-nav-link.active {
+  background: #22c55e;
+  color: #020617;
+}
+
+.app-nav-cart {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: #111827;
+  color: #e5e7eb;
+  cursor: pointer;
+  border: 1px solid #22c55e;
+}
+
+.app-nav-cart span {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.app-nav-user {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Sign in/out button */
+.app-nav-button {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.app-nav-button:hover {
+  background: #e5e7eb;
+  color: #020617;
+}
+
+/* ========== PAGE CONTAINER ========== */
+.page {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1.5rem 3.5rem;
+}
+
+.page-inner {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Heading + helper text */
+.page-header {
+  margin-bottom: 1.75rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
+
+.page-header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+/* ========== FORMS (SEARCH / PLANNER / CHECKOUT) ========== */
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-row input[type="text"],
+.form-row input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.form-row input::placeholder {
+  color: #6b7280;
+}
+
+.btn-primary {
+  padding: 0.65rem 1.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #22c55e;
+  color: #020617;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: #16a34a;
+}
+
+.btn-secondary {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Danger/alert buttons */
+.btn-danger {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #ef4444;
+  color: #f9fafb;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* ========== PLANNER (HOME) ========== */
+.planner-form {
+  margin-bottom: 1.2rem;
+}
+
+.planner-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.planner-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #020617;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #111827;
+}
+
+.planner-item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.planner-item-main input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.planner-item-text {
+  font-size: 0.95rem;
+}
+
+.planner-item.done .planner-item-text {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.planner-item-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+/* ========== GENERIC CARD GRID LAYOUT ========== */
+.section-block {
+  margin-bottom: 2.5rem;
+}
+
+.section-block-header {
+  margin-bottom: 1rem;
+}
+
+.section-block-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.section-block-header p {
+  margin: 0.25rem 0 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.product-grid,
+.movies-grid,
+.merch-grid,
+.subscriptions-grid,
+.cart-items-grid,
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.3rem;
+}
+
+/* Generic card */
+.card {
+  background: #020617;
+  border-radius: 0.9rem;
+  border: 1px solid #111827;
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-image-wrapper {
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+}
+
+.card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-body {
+  padding: 0.8rem 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.card-price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+.card-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Make subscriptions and merch clearly separated */
+.subscriptions-grid {
+  margin-bottom: 2rem;
+}
+
+/* ========== MOVIES PAGE ========== */
+.movies-hero-text {
+  margin-bottom: 0.8rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.movie-meta {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* ========== FAVORITES PAGE ========== */
+.favorites-empty {
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+/* ========== CART / CHECKOUT PAGE ========== */
+.cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.cart-items-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.cart-item-card .card-image-wrapper {
+  height: 130px;        /* smaller uniform size */
+}
+
+.cart-item-card .card-title {
+  font-size: 0.95rem;
+}
+
+.cart-item-qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+.cart-summary {
+  background: #020617;
+  border-radius: 0.9rem;
+  border: 1px solid #111827;
+  padding: 1rem 1rem 1.2rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.cart-summary h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.cart-summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.cart-summary-total {
+  border-top: 1px solid #111827;
+  padding-top: 0.6rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.checkout-methods {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.checkout-methods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+}
+
+.checkout-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  font-size: 0.8rem;
+}
+
+/* Checkout button large + readable */
+.btn-checkout {
+  margin-top: 0.9rem;
+  width: 100%;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.7rem;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #020617;
+  font-weight: 700;
+  font-size: 0.98rem;
+  cursor: pointer;
+}
+
+.btn-checkout:hover {
+  filter: brightness(1.05);
+}
+
+/* ========== FLOATING CART BADGE (OPTIONAL) ========== */
+.floating-cart-badge {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 40;
+  background: #22c55e;
+  color: #020617;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+}
+
+.floating-cart-badge span {
+  font-weight: 600;
+}
+
+/* ========== RESPONSIVE TWEAKS ========== */
+@media (max-width: 900px) {
+  .app-nav {
+    padding-inline: 1.3rem;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+  }
+  .app-nav-links {
+    flex-wrap: wrap;
+  }
+  .cart-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 1rem;
+  }
+  .page-header h1 {
+    font-size: 1.6rem;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .form-row button {
+    width: 100%;
+  }
+}

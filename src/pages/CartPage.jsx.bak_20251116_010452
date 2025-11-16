@@ -1,0 +1,276 @@
+import React, { useMemo, useState } from "react";
+import { useApp } from "../context/AppContext";
+
+const CartPage = () => {
+  const { cartItems, cartTotal, removeFromCart, clearCart } = useApp();
+
+  const itemCount = useMemo(
+    () =>
+      (cartItems || []).reduce(
+        (sum, item) => sum + (item.quantity || 1),
+        0
+      ),
+    [cartItems]
+  );
+
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [cardDetails, setCardDetails] = useState({
+    name: "",
+    number: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  const handleCardChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+    if (!cartItems || cartItems.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    if (paymentMethod === "card") {
+      if (!cardDetails.name || !cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+        alert("Please complete all card fields for this demo checkout.");
+        return;
+      }
+    }
+
+    alert(
+      `Demo checkout complete via ${paymentMethod.toUpperCase()} for $${(cartTotal || 0).toFixed(
+        2
+      )}. Your cart will now be cleared.`
+    );
+    clearCart && clearCart();
+  };
+
+  if (!cartItems) {
+    return (
+      <div className="page">
+        <div className="page-inner">
+          <p className="text-gray-300 text-sm">Loading cart…</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page">
+      <div className="page-inner max-w-6xl mx-auto">
+        <div className="page-header mb-6">
+          <h1>StreamList Dashboard</h1>
+          <p>Review your subscriptions and items before placing a demo order.</p>
+        </div>
+
+        {cartItems.length === 0 ? (
+          <p className="text-gray-400 text-sm">
+            Your cart is empty. Visit the Shop page to add a subscription or items.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+            {/* LEFT: items */}
+            <div>
+              <div className="mb-3">
+                <h2 className="text-lg font-semibold text-white">Items in your cart</h2>
+                <p className="text-gray-400 text-xs">
+                  You currently have {itemCount} item{itemCount !== 1 ? "s" : ""} in your cart.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-slate-900/80 border border-slate-700 rounded-xl p-3 flex flex-col"
+                  >
+                    <div className="w-full h-28 bg-black/40 rounded-lg flex items-center justify-center mb-3 overflow-hidden">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">No image</span>
+                      )}
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-white font-semibold text-sm">
+                          {item.title}
+                        </h3>
+                        {item.type && (
+                          <span className="text-[10px] uppercase tracking-wide text-gray-400">
+                            {item.type}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-400 text-xs mb-2">
+                        ${Number(item.price || 0).toFixed(2)} · Qty:{" "}
+                        {item.quantity || 1}
+                      </p>
+                      <div className="mt-auto flex justify-end">
+                        <button
+                          type="button"
+                          className="px-2 py-1 rounded-full bg-red-500 text-xs text-white hover:bg-red-400"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT: summary + payment */}
+            <aside className="bg-slate-900/80 border border-slate-700 rounded-xl p-4 h-fit">
+              <h2 className="text-lg font-semibold text-white mb-3">
+                Order summary
+              </h2>
+
+              <div className="flex justify-between text-sm text-gray-300 mb-1">
+                <span>Items</span>
+                <span>{itemCount}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-300 mb-1">
+                <span>Subtotal</span>
+                <span>${(cartTotal || 0).toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-400 mb-1">
+                <span>Estimated tax</span>
+                <span>$0.00</span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold text-white mt-2 mb-4 border-t border-slate-700 pt-2">
+                <span>Total due today</span>
+                <span>${(cartTotal || 0).toFixed(2)}</span>
+              </div>
+
+              {/* Payment options */}
+              <div className="mb-3">
+                <div className="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                  Payment method
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {[
+                    { id: "card", label: "Card (credit / debit)" },
+                    { id: "paypal", label: "PayPal" },
+                    { id: "cashapp", label: "Cash App Pay" },
+                    { id: "applepay", label: "Apple Pay" },
+                  ].map((opt) => (
+                    <label
+                      key={opt.id}
+                      className={`px-3 py-1 rounded-full border cursor-pointer ${
+                        paymentMethod === opt.id
+                          ? "bg-sky-500 text-black border-sky-400"
+                          : "bg-slate-950 text-gray-200 border-slate-700"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="payment"
+                        value={opt.id}
+                        checked={paymentMethod === opt.id}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="mr-1"
+                      />
+                      {opt.label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {paymentMethod === "card" && (
+                <form className="space-y-2 text-sm" onSubmit={handleCheckout}>
+                  <div>
+                    <label className="block mb-1 text-gray-300">
+                      Name on card
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={cardDetails.name}
+                      onChange={handleCardChange}
+                      className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                      placeholder="Full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-gray-300">
+                      Card number
+                    </label>
+                    <input
+                      type="text"
+                      name="number"
+                      value={cardDetails.number}
+                      onChange={handleCardChange}
+                      className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                      placeholder="1234 5678 9012 3456"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="block mb-1 text-gray-300">
+                        Expiry (MM/YY)
+                      </label>
+                      <input
+                        type="text"
+                        name="expiry"
+                        value={cardDetails.expiry}
+                        onChange={handleCardChange}
+                        className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                        placeholder="09/27"
+                      />
+                    </div>
+                    <div className="w-24">
+                      <label className="block mb-1 text-gray-300">
+                        CVV
+                      </label>
+                      <input
+                        type="password"
+                        name="cvv"
+                        value={cardDetails.cvv}
+                        onChange={handleCardChange}
+                        className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                        placeholder="123"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="mt-3 w-full px-3 py-2 rounded-md bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition"
+                  >
+                    Complete demo checkout
+                  </button>
+                </form>
+              )}
+
+              {paymentMethod !== "card" && (
+                <button
+                  type="button"
+                  onClick={handleCheckout}
+                  className="mt-3 w-full px-3 py-2 rounded-md bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition"
+                >
+                  Complete demo checkout with{" "}
+                  {paymentMethod === "paypal"
+                    ? "PayPal"
+                    : paymentMethod === "cashapp"
+                    ? "Cash App Pay"
+                    : "Apple Pay"}
+                </button>
+              )}
+            </aside>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CartPage;

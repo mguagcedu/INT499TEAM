@@ -1,0 +1,75 @@
+:root {
+  --bg-main: #020617;
+  --bg-nav: #020617f2;
+  --bg-surface: #020617;
+  --border-subtle: #111827;
+  --border-strong: #1f2933;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+  --accent-primary: #0ea5e9;
+  --accent-success: #22c55e;
+  --accent-danger: #ef4444;
+  --shadow-soft: 0 18px 30px rgba(15, 23, 42, 0.7);
+}
+
+/* dark theme (default) */
+html.theme-dark {
+  --bg-main: #020617;
+  --bg-nav: #020617f2;
+  --bg-surface: #020617;
+  --border-subtle: #111827;
+  --border-strong: #1f2933;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+  --accent-primary: #0ea5e9;
+  --accent-success: #22c55e;
+  --accent-danger: #ef4444;
+}
+
+/* soft dark theme, a bit brighter */
+html.theme-soft {
+  --bg-main: #020518;
+  --bg-nav: #020518f2;
+  --bg-surface: #020617;
+  --border-subtle: #0b1120;
+  --border-strong: #1f2933;
+  --text-main: #f9fafb;
+  --text-muted: #d1d5db;
+  --text-subtle: #9ca3af;
+  --accent-primary: #38bdf8;
+  --accent-success: #22c55e;
+  --accent-danger: #f97373;
+}
+
+/* light theme on white */
+html.theme-light {
+  --bg-main: #f9fafb;
+  --bg-nav: #ffffff;
+  --bg-surface: #ffffff;
+  --border-subtle: #e5e7eb;
+  --border-strong: #d1d5db;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+  --accent-primary: #0ea5e9;
+  --accent-success: #16a34a;
+  --accent-danger: #dc2626;
+  --shadow-soft: 0 14px 25px rgba(15, 23, 42, 0.08);
+}
+
+/* high contrast for low vision */
+html.theme-high-contrast {
+  --bg-main: #000000;
+  --bg-nav: #000000;
+  --bg-surface: #000000;
+  --border-subtle: #ffffff;
+  --border-strong: #ffffff;
+  --text-main: #ffffff;
+  --text-muted: #facc15;
+  --text-subtle: #f97316;
+  --accent-primary: #22c55e;
+  --accent-success: #22c55e;
+  --accent-danger: #ef4444;
+}

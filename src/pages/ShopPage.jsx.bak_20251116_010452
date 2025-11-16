@@ -1,0 +1,195 @@
+import React from "react";
+import { useApp } from "../context/AppContext";
+
+// Subscriptions
+const subscriptions = [
+  {
+    id: "sub-level-1",
+    title: "Level 1 StreamList",
+    description: "Basic subscription with access to standard EZTechMovie content.",
+    price: 9.99,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/025/437/982/non_2x/game-level-up-shield-badge-win-icon-bonus-award-vector.jpg",
+  },
+  {
+    id: "sub-level-2",
+    title: "Level 2 StreamList",
+    description:
+      "Extended catalog, early access to new releases, and priority support.",
+    price: 14.99,
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvdwVRbBdbV8prg18ao7o_zzzDwOFodVrPRA&s",
+  },
+  {
+    id: "sub-level-3",
+    title: "Level 3 StreamList",
+    description:
+      "All content, 4K streaming, family profiles, and exclusive premieres.",
+    price: 19.99,
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWC_ePsWFETslNjKtXVysDTItR-uxpaaaP7w&s",
+  },
+];
+
+// Merch items
+const merchItems = [
+  {
+    id: "merch-shirt",
+    title: "EZTechMovie T-Shirt",
+    description: "Soft black tee with the EZTechMovie logo.",
+    price: 24.99,
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeIY969YenTvHsgWRjmSsFWgpWdnRS0aEaYw&s",
+  },
+  {
+    id: "merch-hoodie",
+    title: "EZTechMovie Hoodie",
+    description: "Cozy hoodie for marathon streaming sessions.",
+    price: 39.99,
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/thumbnails/026/325/400/small/white-hoodie-mockup-empty-and-3d-isolated-on-a-plain-background-ai-generated-photo.jpg",
+  },
+  {
+    id: "merch-case",
+    title: "EZTechMovie Phone Case",
+    description: "Protective case with minimalist EZTech branding.",
+    price: 19.99,
+    imageUrl:
+      "https://cdn.thewirecutter.com/wp-content/media/2024/10/BEST-IPHONE-16-CASES-2048px-4833-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp",
+  },
+];
+
+const ShopPage = () => {
+  const { addToCart, cartItems = [] } = useApp();
+
+  // Lock cart to ONE subscription by id prefix (sub-level-*)
+  const hasSubscriptionInCart = cartItems.some(
+    (item) =>
+      typeof item.id === "string" && item.id.toLowerCase().startsWith("sub-level")
+  );
+
+  const handleAddSubscription = (sub) => {
+    if (hasSubscriptionInCart) {
+      alert(
+        "You already have a subscription in your cart. Remove it from the cart to choose a different level."
+      );
+      return;
+    }
+    addToCart({
+      ...sub,
+      type: "subscription",
+      quantity: 1,
+    });
+  };
+
+  const handleAddMerch = (item) => {
+    addToCart({
+      ...item,
+      type: "merch",
+      quantity: 1,
+    });
+  };
+
+  return (
+    <div className="page">
+      <div className="page-inner max-w-6xl mx-auto">
+        <div className="page-header mb-8">
+          <h1>Shop</h1>
+          <p>Choose a subscription level and pick up some EZTechMovie gear.</p>
+        </div>
+
+        {/* SUBSCRIPTIONS – strict 3-across landscape when screen is md+ */}
+        <section className="mb-10">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-white">Subscriptions</h2>
+            <p className="text-gray-400 text-sm">
+              Only one subscription can be active at a time in your cart.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {subscriptions.map((sub) => (
+              <div
+                key={sub.id}
+                className="bg-slate-900/80 border border-slate-700 rounded-xl p-4 flex flex-col"
+              >
+                <div className="w-full h-32 bg-black/40 rounded-lg flex items-center justify-center mb-3 overflow-hidden">
+                  <img
+                    src={sub.imageUrl}
+                    alt={sub.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <h3 className="text-white font-semibold text-sm mb-1">
+                  {sub.title}
+                </h3>
+                <p className="text-gray-400 text-xs mb-3">
+                  {sub.description}
+                </p>
+                <div className="mt-auto flex items-center justify-between">
+                  <span className="text-emerald-400 font-semibold text-sm">
+                    ${sub.price.toFixed(2)}
+                  </span>
+                  <button
+                    type="button"
+                    className="px-3 py-1.5 rounded-full bg-sky-500 text-black text-xs font-semibold hover:bg-sky-400 transition"
+                    onClick={() => handleAddSubscription(sub)}
+                  >
+                    Add subscription
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* MERCH – second 3-across row below subs */}
+        <section className="mb-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-white">Merchandise</h2>
+            <p className="text-gray-400 text-sm">
+              Represent EZTechMovie with apparel and accessories.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {merchItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-slate-900/80 border border-slate-700 rounded-xl p-4 flex flex-col"
+              >
+                <div className="w-full h-32 bg-black/40 rounded-lg flex items-center justify-center mb-3 overflow-hidden">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <h3 className="text-white font-semibold text-sm mb-1">
+                  {item.title}
+                </h3>
+                <p className="text-gray-400 text-xs mb-3">
+                  {item.description}
+                </p>
+                <div className="mt-auto flex items-center justify-between">
+                  <span className="text-emerald-400 font-semibold text-sm">
+                    ${item.price.toFixed(2)}
+                  </span>
+                  <button
+                    type="button"
+                    className="px-3 py-1.5 rounded-full bg-sky-500 text-black text-xs font-semibold hover:bg-sky-400 transition"
+                    onClick={() => handleAddMerch(item)}
+                  >
+                    Add to cart
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default ShopPage;

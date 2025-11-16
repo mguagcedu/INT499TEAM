@@ -1,0 +1,162 @@
+/* ============================================================
+   GLOBAL APP UI FIXES
+============================================================ */
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* Universal container for all pages */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* NAVIGATION FIX */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 25px;
+  background: #0f1624;
+  border-bottom: 1px solid #222;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+}
+
+/* Planner input fix */
+input[type="text"], input[type="search"], textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #555;
+  background: #1a1a1a;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+/* ============================================================
+   SHOP PAGE — 3 ITEM GRID
+============================================================ */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.shop-card, .sub-card {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+}
+
+.shop-img, .sub-img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #000;
+}
+
+/* ============================================================
+   MOVIES — POSTER FIX + GRID LAYOUT
+============================================================ */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   FAVORITES — SAME POSTER STYLE
+============================================================ */
+.favorite-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+}
+
+/* ============================================================
+   CART — FLOATING CART + CHECKOUT
+============================================================ */
+
+/* floating cart */
+.floating-cart {
+  position: fixed;
+  right: 20px;
+  bottom: 25px;
+  background: #0a84ff;
+  padding: 10px 20px;
+  border-radius: 40px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* checkout layout */
+.checkout-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+.checkout-item {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 20px 0;
+}
+
+.checkout-img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+}
+
+.checkout-price {
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0a84ff;
+}
+
+.checkout-button {
+  padding: 12px 25px;
+  background: #0a84ff;
+  color: #000;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 12px;
+  margin-top: 25px;
+}

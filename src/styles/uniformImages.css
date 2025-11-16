@@ -1,0 +1,19 @@
+.uniform-poster {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  display: block;
+  margin: 0 auto;
+}
+
+.uniform-shop-image {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  display: block;
+  margin: 0 auto;
+}

@@ -1,0 +1,159 @@
+import React from "react";
+import { useApp } from "../context/AppContext";
+
+const subscriptions = [
+  {
+    id: "sub-1",
+    name: "Level 1 StreamList",
+    description: "Basic subscription with access to standard EZTechMovie content.",
+    price: 9.99,
+    type: "subscription",
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/previews/025/437/982/non_2x/game-level-up-shield-badge-win-icon-bonus-award-vector.jpg",
+  },
+  {
+    id: "sub-2",
+    name: "Level 2 StreamList",
+    description: "Extended catalog, early access to new releases, priority support.",
+    price: 14.99,
+    type: "subscription",
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvdwVRbBdbV8prg18ao7o_zzzDwOFodVrPRA&s",
+  },
+  {
+    id: "sub-3",
+    name: "Level 3 StreamList",
+    description: "All content, 4K streaming, family profiles, exclusive premieres.",
+    price: 19.99,
+    type: "subscription",
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWC_ePsWFETslNjKtXVysDTItR-uxpaaaP7w&s",
+  },
+];
+
+const merch = [
+  {
+    id: "item-shirt",
+    name: "EZTechMovie T-Shirt",
+    description: "Soft cotton tee with the EZTechMovie logo on the front.",
+    price: 24.99,
+    type: "item",
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeIY969YenTvHsgWRjmSsFWgpWdnRS0aEaYw&s",
+  },
+  {
+    id: "item-hoodie",
+    name: "EZTechMovie Hoodie",
+    description: "Cozy hoodie, perfect for long movie marathons.",
+    price: 44.99,
+    type: "item",
+    imageUrl:
+      "https://static.vecteezy.com/system/resources/thumbnails/026/325/400/small/white-hoodie-mockup-empty-and-3d-isolated-on-a-plain-background-ai-generated-photo.jpg",
+  },
+  {
+    id: "item-case",
+    name: "EZTech Phone Case",
+    description: "Protective case with a minimal EZTechMovie design.",
+    price: 19.99,
+    type: "item",
+    imageUrl:
+      "https://cdn.thewirecutter.com/wp-content/media/2024/10/BEST-IPHONE-16-CASES-2048px-4833-2x1-1.jpg?width=2048&quality=75&crop=2:1&auto=webp",
+  },
+];
+
+export default function ShopPage() {
+  const { cart, addToCart } = useApp();
+
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const handleAdd = (product) => {
+    if (product.type === "subscription") {
+      const hasSubscription = cart.some((item) => item.type === "subscription");
+      if (hasSubscription) {
+        alert(
+          "You can only have one subscription in your cart at a time. Remove the current subscription before adding another."
+        );
+        return;
+      }
+    }
+    addToCart(product);
+  };
+
+  return (
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <h2 className="page-title">Shop</h2>
+          <p className="page-subtitle">
+            Choose a subscription level and gear to go with your StreamList experience.
+          </p>
+        </div>
+        <div className="cart-indicator">
+          Cart ({cartCount})
+        </div>
+      </div>
+
+      {/* Subscriptions section */}
+      <section className="shop-section">
+        <h3 className="section-title">Subscriptions</h3>
+        <p className="section-subtitle">
+          Only one subscription can be active at a time in your cart.
+        </p>
+        <div className="card-grid shop-grid-3">
+          {subscriptions.map((sub) => (
+            <div key={sub.id} className="card product-card">
+              <div className="product-image-wrap">
+                <img
+                  src={sub.imageUrl}
+                  alt={sub.name}
+                  className="product-image"
+                />
+              </div>
+              <h4 className="card-title">{sub.name}</h4>
+              <p className="card-meta multi-line">{sub.description}</p>
+              <p className="card-price">${sub.price.toFixed(2)}</p>
+              <button
+                type="button"
+                className="btn-primary-small"
+                onClick={() => handleAdd(sub)}
+              >
+                Add subscription
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Items section */}
+      <section className="shop-section">
+        <h3 className="section-title">Merchandise</h3>
+        <p className="section-subtitle">
+          Add shirts, hoodies, and cases to your cart. Quantities can be adjusted at checkout.
+        </p>
+        <div className="card-grid shop-grid-3">
+          {merch.map((item) => (
+            <div key={item.id} className="card product-card">
+              <div className="product-image-wrap">
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="product-image"
+                />
+              </div>
+              <h4 className="card-title">{item.name}</h4>
+              <p className="card-meta multi-line">{item.description}</p>
+              <p className="card-price">${item.price.toFixed(2)}</p>
+              <button
+                type="button"
+                className="btn-primary-small"
+                onClick={() => handleAdd(item)}
+              >
+                Add to cart
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

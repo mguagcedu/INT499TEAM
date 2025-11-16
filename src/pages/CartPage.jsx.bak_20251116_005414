@@ -1,0 +1,269 @@
+import React, { useMemo, useState } from "react";
+import { useApp } from "../context/AppContext";
+
+const CartPage = () => {
+  const { cartItems, cartTotal, removeFromCart, clearCart } = useApp();
+
+  const itemCount = useMemo(
+    () => cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0),
+    [cartItems]
+  );
+
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [cardDetails, setCardDetails] = useState({
+    name: "",
+    number: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  const handleCardChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+    if (paymentMethod === "card") {
+      if (!cardDetails.name || !cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+        alert("Please complete all card fields for this demo checkout.");
+        return;
+      }
+    }
+    alert(
+      `Demo checkout complete via ${paymentMethod.toUpperCase()} for $${cartTotal.toFixed(
+        2
+      )}. Your cart will now be cleared.`
+    );
+    clearCart();
+  };
+
+  return (
+    <div className="page">
+      <div className="page-inner cart-page">
+        <div className="page-header">
+          <h1>StreamList Dashboard</h1>
+          <p>Review your subscriptions and items before placing a demo order.</p>
+        </div>
+
+        {cartItems.length === 0 ? (
+          <p className="text-gray-400 text-sm">
+            Your cart is empty. Visit the Shop page to add a subscription or items.
+          </p>
+        ) : (
+          <div className="cart-layout">
+            {/* LEFT: cart items */}
+            <div>
+              <div className="section-block-header">
+                <h2>Items in your cart</h2>
+                <p className="text-gray-400 text-sm">
+                  You currently have {itemCount} item{itemCount !== 1 ? "s" : ""} in your cart.
+                </p>
+              </div>
+
+              <div className="cart-items-grid">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="card cart-item-card"
+                  >
+                    <div className="card-image-wrapper">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
+                          No image
+                        </div>
+                      )}
+                    </div>
+                    <div className="card-body">
+                      <div className="card-title">{item.title}</div>
+                      {item.type && (
+                        <div className="card-subtitle capitalize">
+                          {item.type === "subscription" ? "Subscription" : item.type}
+                        </div>
+                      )}
+                      <div className="card-price">
+                        ${Number(item.price || 0).toFixed(2)}
+                      </div>
+                      <div className="cart-item-qty-row">
+                        <span className="text-xs text-gray-400">
+                          Qty: {item.quantity || 1}
+                        </span>
+                        <button
+                          type="button"
+                          className="btn-danger"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT: summary + payment */}
+            <aside className="cart-summary">
+              <h2>Order summary</h2>
+
+              <div className="cart-summary-row">
+                <span>Items</span>
+                <span>{itemCount}</span>
+              </div>
+              <div className="cart-summary-row">
+                <span>Subtotal</span>
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
+              <div className="cart-summary-row">
+                <span>Estimated tax</span>
+                <span>$0.00</span>
+              </div>
+              <div className="cart-summary-total">
+                <span>Total due today</span>
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
+
+              <div className="checkout-methods">
+                <div className="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                  Payment method
+                </div>
+                <div className="checkout-methods-list">
+                  <label className="checkout-pill">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="card"
+                      checked={paymentMethod === "card"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-1"
+                    />
+                    Card (credit / debit)
+                  </label>
+                  <label className="checkout-pill">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="paypal"
+                      checked={paymentMethod === "paypal"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-1"
+                    />
+                    PayPal
+                  </label>
+                  <label className="checkout-pill">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="cashapp"
+                      checked={paymentMethod === "cashapp"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-1"
+                    />
+                    Cash App Pay
+                  </label>
+                  <label className="checkout-pill">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="applepay"
+                      checked={paymentMethod === "applepay"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-1"
+                    />
+                    Apple Pay
+                  </label>
+                </div>
+              </div>
+
+              {/* Card form only if card selected */}
+              {paymentMethod === "card" && (
+                <form className="mt-3 space-y-2 text-sm" onSubmit={handleCheckout}>
+                  <div>
+                    <label className="block mb-1 text-gray-300">
+                      Name on card
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={cardDetails.name}
+                      onChange={handleCardChange}
+                      className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                      placeholder="Full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-gray-300">
+                      Card number
+                    </label>
+                    <input
+                      type="text"
+                      name="number"
+                      value={cardDetails.number}
+                      onChange={handleCardChange}
+                      className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                      placeholder="1234 5678 9012 3456"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <label className="block mb-1 text-gray-300">
+                        Expiry (MM/YY)
+                      </label>
+                      <input
+                        type="text"
+                        name="expiry"
+                        value={cardDetails.expiry}
+                        onChange={handleCardChange}
+                        className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                        placeholder="09/27"
+                      />
+                    </div>
+                    <div className="w-24">
+                      <label className="block mb-1 text-gray-300">
+                        CVV
+                      </label>
+                      <input
+                        type="password"
+                        name="cvv"
+                        value={cardDetails.cvv}
+                        onChange={handleCardChange}
+                        className="w-full px-2 py-1.5 rounded-md border border-gray-600 bg-slate-950 text-white text-sm"
+                        placeholder="123"
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn-checkout">
+                    Complete demo checkout
+                  </button>
+                </form>
+              )}
+
+              {paymentMethod !== "card" && (
+                <button
+                  type="button"
+                  onClick={handleCheckout}
+                  className="btn-checkout"
+                >
+                  Complete demo checkout with{" "}
+                  {paymentMethod === "paypal"
+                    ? "PayPal"
+                    : paymentMethod === "cashapp"
+                    ? "Cash App Pay"
+                    : "Apple Pay"}
+                </button>
+              )}
+            </aside>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CartPage;
